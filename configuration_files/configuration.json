@@ -1,0 +1,70 @@
+{
+  "network": {
+    "ssid": "YarenAccessPoint",
+    "password": "yarentheoak",
+    "subnet": "255.255.255.0",
+    "gateway": "192.168.4.1",
+    "dns": "8.8.8.8"
+  },
+  "boards": {
+    "192.168.4.50": [
+      {
+        "name": "humidity_sensor",
+        "type": "sensor",
+        "sensor_pin_number": 26,
+        "power_pin_number_3_3_v": 10,
+        "a": 1.0,
+        "b": 0.0
+      },
+      {
+        "name": "moisture_sensor",
+        "type": "sensor",
+        "sensor_pin_number": 27,
+        "power_pin_number_3_3_v": 14,
+        "a": 1.0,
+        "b": 0.0
+      },
+      {
+        "name": "water_servo",
+        "type": "servo",
+        "pin_number": 16,
+        "up_angle_deg": 180,
+        "down_angle_deg": 0,
+        "swing_wait_time_s": 1,
+        "freq": 50,
+        "min_ns": 1000000,
+        "max_ns": 2000000
+      },
+      {
+        "name": "light_servo",
+        "type": "servo",
+        "pin_number": 19,
+        "up_angle_deg": 180,
+        "down_angle_deg": 0,
+        "swing_wait_time_s": 1,
+        "freq": 50,
+        "min_ns": 1000000,
+        "max_ns": 2000000
+      },
+      {
+        "name": "builtin_led",
+        "type": "builtinled",
+        "blink_up_time_s": 0.01
+      }
+    ]
+  },
+  "zmq_data_store": {
+    "main_loop_sleep_time_s": 1,
+    "watering_interval_s": 10,
+    "lighting_start_time_h": 7,
+    "lighting_start_time_min": 0,
+    "lighting_end_time_h": 19,
+    "lighting_end_time_min": 0,
+    "humidity_lr_a_factor": 1.0,
+    "humidity_lr_b_factor": 0.0,
+    "moisture_lr_a_factor": 1.0,
+    "moisture_lr_b_factor": 0.0,
+    "humidity_watering_treshold_p": 11000,
+    "moisture_watering_treshold_p": 9000
+  }
+}

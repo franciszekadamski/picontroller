@@ -1,0 +1,9 @@
+#!/usr/bin/bash
+
+./scripts/send.sh humidity_sensor:read
+./scripts/send.sh moisture_sensor:read
+./scripts/send.sh water_servo:swing
+./scripts/send.sh light_servo:up
+./scripts/send.sh light_servo:down
+./scripts/send.sh light_servo:down
+./scripts/send.sh builtin_led:blink

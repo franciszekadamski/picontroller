@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+streamlit run ./hub/lh_webapp.py
