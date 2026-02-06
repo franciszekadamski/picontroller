@@ -9,12 +9,13 @@ from boards import PicoBoard, create_boards
 
 class BasicController:
     def __init__(self, configuration_file_path: str):
-        self.boards = create_boards(configuration_file_path)
-        with open(configuration_file_path, 'r') as file:
-            configuration = json.loads(file.read())
+        self.configuration_file_path = configuration_file_path
+        self.boards = create_boards(self.configuration_file_path)
+        with open(self.configuration_file_path, 'r') as file:
+            self.configuration = json.loads(file.read())
 
         self.device_board_map = {}
-        for board_ip, devices in configuration['boards'].items():
+        for board_ip, devices in self.configuration['boards'].items():
             for device in devices:
                 device_name = device['name']
                 self.device_board_map[device_name] = board_ip
@@ -23,7 +24,7 @@ class BasicController:
         self.zmq_context = zmq.Context()
         self.zmq_socket = self.zmq_context.socket(zmq.REP)
         self.zmq_socket.bind('tcp://*:5555')
-        self.zmq_data_store = configuration['zmq_data_store']
+        self.zmq_data_store = self.configuration['zmq_data_store']
 
 
     def send(self, message: str):
@@ -42,6 +43,11 @@ class BasicController:
             elif message.get('action') == 'set':
                 new_data = message.get('data', {})
                 self.zmq_data_store.update(new_data)
+                self.zmq_socket.send_json(self.zmq_data_store)
+            elif message.get('action') == 'save':
+                with open(self.configuration_file_path, 'w') as file:
+                    self.configuration['zmq_data_store'] = self.zmq_data_store
+                    file.write(json.dumps(self.configuration))
                 self.zmq_socket.send_json(self.zmq_data_store)
         except zmq.Again:
             pass

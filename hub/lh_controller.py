@@ -45,6 +45,9 @@ class LHController(BasicController):
         print(f"humidity: {humidity_p}")
         print(f"temperature: {temperature_c}")
         print(f"moisture: {moisture_p}")
+        self.zmq_data_store['humidity'] = humidity_p
+        self.zmq_data_store['temperature'] = temperature_c
+        self.zmq_data_staorp['moisture'] = moisture_p
 
         self.zmq_data_store['humidity'] = humidity_p
         self.zmq_data_store['temperature'] = temperature_c
