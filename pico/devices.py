@@ -23,7 +23,8 @@ class Sensor:
             raw_value = self.sensor.read_u16()
             return self.equation(raw_value)
         except OSError as e:
-            print("Error: humidity could not be read")
+            pass
+            ## print("Error: humidity could not be read")
 
 
     def power_down(self):
@@ -84,7 +85,7 @@ class DHT11Sensor(Sensor):
             return f"temperature-{temp};humidity-{humidity}" 
 
         except OSError:
-            print("Error: DHT11 could not be read")
+            # print("Error: DHT11 could not be read")
             return 300
 
 
@@ -93,8 +94,8 @@ class DHT11Sensor(Sensor):
             self.sensor.measure()
             return self.sensor.temperature()
         except OSError:
-            print("Error reading temperature")
-            return 300
+            # print("Error reading temperature")
+            return 400
 
 
     def read_humidity(self):
@@ -102,7 +103,7 @@ class DHT11Sensor(Sensor):
             self.sensor.measure()
             return self.sensor.humidity()
         except OSError:
-            return 300
+            return 500
 
 
     def __call__(self, command: str):
