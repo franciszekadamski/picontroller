@@ -87,8 +87,7 @@ def main(action, key, value):
             'data': data
         }
         data = send_and_receive(socket, payload)
-        click.echo('data set')
-        show_as_table(data)
+        click.echo(f'{key}: {value}')
     elif action == 'save':
         data = send_and_receive(socket, {'action': 'save'})
         click.echo('data saved')
