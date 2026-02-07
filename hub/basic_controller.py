@@ -47,7 +47,7 @@ class BasicController:
             elif message.get('action') == 'save':
                 with open(self.configuration_file_path, 'w') as file:
                     self.configuration['zmq_data_store'] = self.zmq_data_store
-                    file.write(json.dumps(self.configuration))
+                    file.write(json.dumps(self.configuration, indent=2))
                 self.zmq_socket.send_json(self.zmq_data_store)
         except zmq.Again:
             pass
