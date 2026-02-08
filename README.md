@@ -132,7 +132,7 @@ adjust the configuration files and scripts to your needs.
 
 The framework is inteded to work as described below.
 
-Each of your Pico boards have scripts from `pico` directory uploaded along the
+Each of your Pico boards has scripts from `pico` directory uploaded along the
 python interpreter. Each board contains:
 
 - python modules,
@@ -144,4 +144,9 @@ A server connected to the same network reads the same configuration file and
 communicates via TCP with Picos. The server can send a request, asking for
 readings from sensor or requesting actuator action. Each "device", which is for
 example a humidity sensor or a servo, has it's unique name.
+
+Hub running on the server does two things:
+
+- sends requests to Picos
+- handles user request by changing the zmq data store values.
 
