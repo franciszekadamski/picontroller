@@ -10,13 +10,15 @@ import zmq
 
 CONFIGURATION_FILE_PATH = 'configuration_files/configuration.json'
 
+with open('hub_ip.json', 'r') as file:
+    HUB_IP = json.loads(file.read())['hub_ip']
 
 def get_zmq_socket():
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
     socket.setsockopt(zmq.RCVTIMEO, 5000)
     socket.setsockopt(zmq.SNDTIMEO, 5000)
-    socket.connect('tcp://192.168.4.1:5555')
+    socket.connect(f'tcp://{HUB_IP}:5555')
     return socket
 
 
