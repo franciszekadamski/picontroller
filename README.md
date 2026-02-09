@@ -150,3 +150,13 @@ Hub running on the server does two things:
 - sends requests to Picos
 - handles user request by changing the zmq data store values.
 
+### Web interface
+
+The `cli` tool uses python functions underneath. It is possible to use them
+directly in generated static website as server side callbacks. It could cause
+the web interface to become a seperate branch development, diverging from CLI
+tool depending on how development goes. For this reason server side callbacks
+of the web interface should use the CLI interface script directly as a library,
+since it is possible in python. It ensures, that CLI tool will always have full
+funcionality of the web interface, which can build on top of it.
+
