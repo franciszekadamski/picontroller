@@ -62,8 +62,7 @@ def show_as_table(d, use_unicode=True):
 @click.argument('action')
 @click.argument('key', required=False)
 @click.argument('value', required=False)
-@click.argument('string_value', required=False)
-def main(action, key, value, string_value):
+def main(action, key, value):
     if action not in ['get', 'set', 'save']:
         click.echo(f'possible actions are: get, set, save')
         return
@@ -84,8 +83,9 @@ def main(action, key, value, string_value):
             click.echo('a value must be passed')
             return
 
-        data[key] = float(value)
-        if string_value:
+        try:
+            data[key] = float(value)
+        except ValueError:
             data[key] = str(value)
         payload = {
             'action': 'set',

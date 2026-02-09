@@ -98,5 +98,9 @@ class LHController(BasicController):
             self.zmq_data_store['request'] = ''
             time.sleep(0.5)
 
+        if self.zmq_data_store['request']:
+            answer = self.send(self.zmq_data_store['request'])
+            self.zmq_data_store['request'] = ''
+
         self.send('builtin_led:blink')
 
