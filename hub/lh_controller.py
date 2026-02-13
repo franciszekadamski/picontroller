@@ -83,10 +83,10 @@ class LHController(BasicController):
         if now - self.last_watering_check_time >= self.zmq_data_store['watering_interval_s']:
             self.last_watering_check_time = now
             if self.is_dry():
-                # answer = self.send('water_servo:swing')
-                self.send('water_servo:up')
-                time.sleep(0.5)
-                self.send('water_servo:down')
+                self.send('humidity_rotor:off')
+            else:
+                self.send('humidity_rotor:on')
+
 
         if self.is_light_time():
             answer = self.send('light_servo:down')
