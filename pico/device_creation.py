@@ -1,9 +1,9 @@
 import json
 
-from devices import Sensor, DHT11Sensor, Servo, BuiltinLED
+from devices import Sensor, DHT11Sensor, Servo, BuiltinLED, OnOffDevice
 
 
-DEVICE_TYPES = ['sensor', 'dht11_sensor', 'servo', 'builtinled']
+DEVICE_TYPES = ['sensor', 'dht11_sensor', 'servo', 'builtinled', 'onoffdevice']
 
 
 def create_device(device_description: dict):
@@ -18,6 +18,8 @@ def create_device(device_description: dict):
         device = Servo(device_description)
     elif device_description['type'] == 'builtinled':
         device = BuiltinLED(device_description)
+    elif device_description['type'] == 'onoffdevice':
+        device = OnOffDevice(device_description)
 
     return device
 

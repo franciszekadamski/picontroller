@@ -196,6 +196,46 @@ class Servo:
             return 'is_down'
 
 
+class OnOffDevice:
+    def __init__(self, device_specification: dict):
+        self.led = machine.Pin(device_specification['pin_number'], machine.Pin.OUT)
+        self.blink_up_time_s = device_specification['blink_up_time_s']
+        self.commands = ['blink', 'on', 'off']
+
+
+    def blink(self):
+        self.led.on()
+        time.sleep(self.blink_up_time_s)
+        self.led.off()
+        return 'blinked'
+
+
+    def on(self):
+        self.led.on()
+        return 'is_on'
+
+
+    def off(self):
+        self.led.off()
+        return 'is_off'
+
+
+    def __call__(self, command:str):
+        if command not in self.commands:
+            print(f'unknown command {command}')
+            return 'failed'
+        elif command == 'blink':
+            return self.blink()
+        elif command == 'on':
+            return self.on()
+        elif command == 'off':
+            return self.off()
+
+
+    def update_states(self):
+        pass
+
+
 class BuiltinLED:
     def __init__(self, device_specification: dict):
         self.led = machine.Pin('LED', machine.Pin.OUT)
