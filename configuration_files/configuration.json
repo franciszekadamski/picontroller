@@ -48,6 +48,12 @@
         "name": "builtin_led",
         "type": "builtinled",
         "blink_up_time_s": 0.01
+      },
+      {
+        "name": "humidity_rotor",
+        "type": "onoffdevice",
+        "pin_number": 21,
+        "blink_up_time_s": 0.01
       }
     ]
   },
