@@ -1,36 +1,34 @@
 import json
+import typing
 
-from devices import Sensor, Servo, BuiltinLED
+import pico
+import devices
 
 
-DEVICE_TYPES = ['sensor', 'servo', 'builtinled']
+DEVICE_TYPES: list[str] = ['sensor', 'servo', 'builtinled']
 
 
-def create_device(device_description: dict):
+def create_single_device(device_description: typing.Mapping[str, typing.Any]) -> pico.devices.Device:
     if device_description['type'] not in DEVICE_TYPES:
-        raise Exception(f'unsuported device type: {}')
-
+        raise Exception(f'unsuported device type: {device_description["type"]}')
     if device_description['type'] == 'sensor':
-        device = Sensor(device_description)
+        device = devices.Sensor(device_description)
     elif device_description['type'] == 'servo':
-        device = Servo(device_description)
+        device = devices.Servo(device_description)
     elif device_description['type'] == 'builtinled':
-        device = BuiltinLED(device_description)
-
+        device = devices.BuiltinLED(device_description)
     return device
 
-
-def create_devices(file_path: str, board_ip: str):
+def create_devices(file_path: str, board_ip: str) -> typing.Dict[str, pico.devices.Device]:
     with open(file_path, 'r') as file:
-        device_descriptions = json.loads(file.read())['boards'][board_ip]
-    devices = {}
+        device_descriptions: typing.Sequence[typing.Mapping[str, typing.Any]] = json.loads(file.read())['boards'][board_ip]
+    devices: typing.Dict[str, pico.devices.Device] = {}
     for device_description in device_descriptions:
-        device = create_device(device_description)
-        name = device_description['name']
+        device = create_single_device(device_description)
+        name: str = device_description['name']
         devices[name] = device
     return devices
 
-
-def read_ip(file_path: str):
+def read_ip(file_path: str) -> str:
     with open(file_path, 'r') as file:
         return json.loads(file.read())['board_ip']

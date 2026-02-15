@@ -1,7 +1,6 @@
 import machine
 import time
 import sys
-import uasyncio
 
 
 class Sensor:
@@ -13,7 +12,6 @@ class Sensor:
         self.commands = ['read']
         self.power_up()
 
-
     def equation(self, raw_value):
         return self.a * raw_value + self.b 
 
@@ -24,22 +22,17 @@ class Sensor:
         except OSError as e:
             print("Error: humidity could not be read")
 
-
     def power_down(self):
         self.power.value(0)
-
 
     def power_up(self):
         self.power.value(1)
 
-
     def set_a(self, value: float):
         self.a = value
 
-
     def set_b(self, value: float):
         self.b = value
-
 
     def __call__(self, command: str):
         if command not in self.commands:
@@ -48,10 +41,8 @@ class Sensor:
         elif command == 'read':
             return self.read()
 
-
     def update_states(self):
         pass
-
 
 class Servo:
     def __init__(self, device_specification: dict):
@@ -66,31 +57,24 @@ class Servo:
             'up',
             'down'
         ]
-
         self.swing_wait_time_s = device_specification['swing_wait_time_s']
         self.swing_start_time_s = time.time()
         self.swing_states = ['idle', 'triggered', 'busy']
         self.current_swing_state = 'idle'
-
         self.down()
-
 
     def set_angle(self, angle):
         duty = int(self.min_ns + (self.max_ns - self.min_ns) * (angle / 180))
         self.servo.duty_u16(duty)
 
-
     def up(self):
         self.set_angle(self.up_angle_deg)
-
 
     def down(self):
         self.set_angle(self.down_angle_deg)
 
-
     def swing(self):
         self.current_swing_state = 'triggered'
-
 
     def update_states(self):
         time_delta_s = time.time() - self.swing_start_time_s
@@ -101,7 +85,6 @@ class Servo:
         elif self.current_swing_state == 'busy' and time_delta_s >= self.swing_wait_time_s:
             self.down()
             self.current_swing_state = 'idle'
-
 
     def __call__(self, command: str):
         if command not in self.commands:
@@ -117,13 +100,11 @@ class Servo:
             self.down()
             return 'is_down'
 
-
 class BuiltinLED:
     def __init__(self, device_specification: dict):
         self.led = machine.Pin('LED', machine.Pin.OUT)
         self.blink_up_time_s = device_specification['blink_up_time_s']
         self.commands = ['blink', 'on', 'off']
-
 
     def blink(self):
         self.led.on()
@@ -131,16 +112,13 @@ class BuiltinLED:
         self.led.off()
         return 'blinked'
 
-
     def on(self):
         self.led.on()
         return 'is_on'
 
-
     def off(self):
         self.led.off()
         return 'is_off'
-
 
     def __call__(self, command:str):
         if command not in self.commands:
@@ -152,7 +130,6 @@ class BuiltinLED:
             return self.on()
         elif command == 'off':
             return self.off()
-
 
     def update_states(self):
         pass
