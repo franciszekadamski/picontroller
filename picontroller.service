@@ -1,0 +1,16 @@
+[Unit]
+Dscription=Run Picontroller
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/home/pi/picontroller/picontroller
+WorkingDirectory=/home/pi/picontroller
+User=pi
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+
