@@ -1,6 +1,5 @@
 import pico
 import time
-import sys
 import socket
 
 import device_creation
@@ -13,15 +12,21 @@ CONFIGURATION_FILE_PATH = 'configuration.json'
 IP_FILE_PATH = 'board_ip.json'
 
 
+def setup_socket(board_ip: str) -> socket.socket:
+    """Create and configure network server socket"""
+    server = network_tools.NetworkServer(CONFIGURATION_FILE_PATH, board_ip)
+    socket_conn = server.setup()
+    socket_conn.settimeout(1.0)
+    return socket_conn
+
 def configuration_settings() -> tuple[socket.socket, dict[str, pico.devices.Device], str]:
     board_ip = device_creation.read_ip(IP_FILE_PATH)
-    network_setup = network_tools.setup_network_connection(CONFIGURATION_FILE_PATH, board_ip)
+    network_setup = setup_socket(board_ip)
     devices = device_creation.create_devices(CONFIGURATION_FILE_PATH, board_ip)
     return network_setup, devices, board_ip
 
 def main():
     network_setup, devices, board_ip = configuration_settings()
-    network_setup.settimeout(1.0)  # Set timeout to allow periodic device updates
     
     while True:
         # Update all device states periodically
@@ -29,7 +34,7 @@ def main():
             device.update_states()
         
         try:
-            connection, address = network_setup.accept()
+            connection, _ = network_setup.accept()
         except socket.timeout:
             # Timeout allows loop to continue and update devices
             continue
@@ -37,8 +42,7 @@ def main():
             # Handle socket errors by recreating connection
             print(f'Socket error: {e}')
             network_setup.close()
-            network_setup = network_tools.setup_network_connection(CONFIGURATION_FILE_PATH, board_ip)
-            network_setup.settimeout(1.0)
+            network_setup = setup_socket(board_ip)
             continue
         
         try:
