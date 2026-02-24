@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+scp -r ./* pi@192.168.4.1:/home/pi/picontroller/
+ssh pi@192.168.4.1 'sudo systemctl restart picontroller.service'

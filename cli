@@ -1,0 +1,103 @@
+#!/usr/bin/python3
+
+
+import json
+import time
+
+import click
+import zmq
+
+
+CONFIGURATION_FILE_PATH = 'configuration_files/configuration.json'
+
+with open('hub_ip.json', 'r') as file:
+    HUB_IP = json.loads(file.read())['hub_ip']
+
+def get_zmq_socket():
+    context = zmq.Context()
+    socket = context.socket(zmq.REQ)
+    socket.setsockopt(zmq.RCVTIMEO, 5000)
+    socket.setsockopt(zmq.SNDTIMEO, 5000)
+    socket.connect(f'tcp://{HUB_IP}:5555')
+    return socket
+
+
+def send_and_receive(socket, payload):
+    try:
+        socket.send_json(payload)
+        return socket.recv_json()
+    except zmq.ZMQError:
+        socket.close()
+        return None
+
+
+def show_as_table(d, use_unicode=True):
+    if use_unicode:
+        vertical_separator = '│'
+        horizontal_separator = '─'
+        cross_separator = '┼'
+    else:
+        vertical_separator = '|'
+        horizontal_separator = '-'
+        cross_separator = '+'
+
+    if not d:
+        print("Dictionary is empty.")
+        return
+
+    keys = [str(k) for k in d.keys()]
+    values = [str(v) for v in d.values()]
+
+    key_width = max(len("Key"), max(len(k) for k in keys))
+    val_width = max(len("Value"), max(len(v) for v in values))
+
+    print(f"{'Key'.ljust(key_width)} {vertical_separator} {'Value'.ljust(val_width)}")
+    print(f"{horizontal_separator * key_width}{horizontal_separator}{cross_separator}{horizontal_separator}{horizontal_separator * val_width}")
+
+    for k, v in zip(keys, values):
+        print(f"{k.ljust(key_width)} {vertical_separator} {v.ljust(val_width)}")
+
+
+@click.command()
+@click.argument('action')
+@click.argument('key', required=False)
+@click.argument('value', required=False)
+def main(action, key, value):
+    if action not in ['get', 'set', 'save']:
+        click.echo(f'possible actions are: get, set, save')
+        return
+    socket = get_zmq_socket()
+    data = send_and_receive(socket, {'action': 'get'})
+    if action == 'get':
+        show_as_table(data)
+    elif action == 'set':
+        if not key:
+            click.echo('a key must be passed')
+            return
+
+        if key not in data.keys():
+            click.echo(f'no such key: {key}')
+            return
+
+        if not value:
+            click.echo('a value must be passed')
+            return
+
+        try:
+            data[key] = float(value)
+        except ValueError:
+            data[key] = str(value)
+        payload = {
+            'action': 'set',
+            'data': data
+        }
+        data = send_and_receive(socket, payload)
+        click.echo(f'{key}: {value}')
+    elif action == 'save':
+        data = send_and_receive(socket, {'action': 'save'})
+        click.echo('data saved')
+        show_as_table(data)
+
+
+if __name__ == '__main__':
+    main()

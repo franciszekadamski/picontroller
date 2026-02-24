@@ -1,3 +1,4 @@
+import dht
 import machine
 import time
 import sys
@@ -22,7 +23,8 @@ class Sensor:
             raw_value = self.sensor.read_u16()
             return self.equation(raw_value)
         except OSError as e:
-            print("Error: humidity could not be read")
+            pass
+            ## print("Error: humidity could not be read")
 
 
     def power_down(self):
@@ -53,6 +55,75 @@ class Sensor:
         pass
 
 
+class DHT11Sensor(Sensor):
+    def __init__(self, device_specification: dict):
+        self.power = machine.Pin(
+            device_specification['power_pin_number_3_3_v'],
+            machine.Pin.OUT
+        )
+
+        self.data_pin = machine.Pin(device_specification['sensor_pin_number'])
+        self.sensor = dht.DHT11(self.data_pin)
+
+        self.commands = ['read', 'read_temperature', 'read_humidity']
+
+        self.power_up()
+        time.sleep(1)  # DHT11 needs startup delay
+
+
+    def equation(self, raw_value):
+        return raw_value
+
+
+    def read(self):
+        """Return both temperature and humidity"""
+        try:
+            self.sensor.measure()
+            temp = self.sensor.temperature()
+            humidity = self.sensor.humidity()
+
+            return f"temperature-{temp};humidity-{humidity}" 
+
+        except OSError:
+            # print("Error: DHT11 could not be read")
+            return 300
+
+
+    def read_temp(self):
+        try:
+            self.sensor.measure()
+            return self.sensor.temperature()
+        except OSError:
+            # print("Error reading temperature")
+            return 400
+
+
+    def read_humidity(self):
+        try:
+            self.sensor.measure()
+            return self.sensor.humidity()
+        except OSError:
+            return 500
+
+
+    def __call__(self, command: str):
+        if command not in self.commands:
+            print(f'unknown command {command}')
+            return 'FAILED'
+
+        if command == 'read':
+            return self.read()
+        elif command == 'read_temperature':
+            return self.read_temp()
+        elif command == 'read_humidity':
+            return self.read_humidity()
+
+
+    def update_states(self):
+        # optional state refreshing if you want caching later
+        pass
+
+
 class Servo:
     def __init__(self, device_specification: dict):
         self.servo = machine.PWM(machine.Pin(device_specification['pin_number']))
@@ -75,10 +146,17 @@ class Servo:
         self.down()
 
 
-    def set_angle(self, angle):
-        duty = int(self.min_ns + (self.max_ns - self.min_ns) * (angle / 180))
-        self.servo.duty_u16(duty)
+#     def set_angle(self, angle):
+#         duty = int(self.min_ns + (self.max_ns - self.min_ns) * (angle / 180))
+#         self.servo.duty_u16(duty)
 
+
+    def set_angle(self, angle):
+        min_duty = 1638   # ≈ 0.5ms at 50Hz
+        max_duty = 8192   # ≈ 2.5ms at 50Hz
+
+        duty = int(min_duty + (max_duty - min_duty) * (angle / 180))
+        self.servo.duty_u16(duty)
 
     def up(self):
         self.set_angle(self.up_angle_deg)
@@ -116,6 +194,46 @@ class Servo:
         elif command == 'down':
             self.down()
             return 'is_down'
+
+
+class OnOffDevice:
+    def __init__(self, device_specification: dict):
+        self.led = machine.Pin(device_specification['pin_number'], machine.Pin.OUT)
+        self.blink_up_time_s = device_specification['blink_up_time_s']
+        self.commands = ['blink', 'on', 'off']
+
+
+    def blink(self):
+        self.led.on()
+        time.sleep(self.blink_up_time_s)
+        self.led.off()
+        return 'blinked'
+
+
+    def on(self):
+        self.led.on()
+        return 'is_on'
+
+
+    def off(self):
+        self.led.off()
+        return 'is_off'
+
+
+    def __call__(self, command:str):
+        if command not in self.commands:
+            print(f'unknown command {command}')
+            return 'failed'
+        elif command == 'blink':
+            return self.blink()
+        elif command == 'on':
+            return self.on()
+        elif command == 'off':
+            return self.off()
+
+
+    def update_states(self):
+        pass
 
 
 class BuiltinLED:

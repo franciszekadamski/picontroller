@@ -10,11 +10,9 @@
     "192.168.4.50": [
       {
         "name": "humidity_sensor",
-        "type": "sensor",
+        "type": "dht11_sensor",
         "sensor_pin_number": 26,
-        "power_pin_number_3_3_v": 10,
-        "a": 1.0,
-        "b": 0.0
+        "power_pin_number_3_3_v": 10
       },
       {
         "name": "moisture_sensor",
@@ -28,8 +26,8 @@
         "name": "water_servo",
         "type": "servo",
         "pin_number": 16,
-        "up_angle_deg": 180,
-        "down_angle_deg": 0,
+        "up_angle_deg": 0,
+        "down_angle_deg": 90,
         "swing_wait_time_s": 1,
         "freq": 50,
         "min_ns": 1000000,
@@ -39,8 +37,8 @@
         "name": "light_servo",
         "type": "servo",
         "pin_number": 19,
-        "up_angle_deg": 180,
-        "down_angle_deg": 0,
+        "up_angle_deg": 70,
+        "down_angle_deg": 110,
         "swing_wait_time_s": 1,
         "freq": 50,
         "min_ns": 1000000,
@@ -50,12 +48,18 @@
         "name": "builtin_led",
         "type": "builtinled",
         "blink_up_time_s": 0.01
+      },
+      {
+        "name": "humidity_rotor",
+        "type": "onoffdevice",
+        "pin_number": 21,
+        "blink_up_time_s": 0.01
       }
     ]
   },
   "zmq_data_store": {
-    "main_loop_sleep_time_s": 1,
-    "watering_interval_s": 10,
+    "main_loop_sleep_time_s": 0.1,
+    "watering_interval_s": 5,
     "lighting_start_time_h": 7,
     "lighting_start_time_min": 0,
     "lighting_end_time_h": 19,
@@ -64,7 +68,13 @@
     "humidity_lr_b_factor": 0.0,
     "moisture_lr_a_factor": 1.0,
     "moisture_lr_b_factor": 0.0,
-    "humidity_watering_treshold_p": 11000,
-    "moisture_watering_treshold_p": 9000
+    "humidity_watering_treshold_p": 80,
+    "moisture_watering_treshold_p": 50,
+    "water_servo_state": "",
+    "light_servo_state": "",
+    "humidity": 0,
+    "temperature": 0,
+    "moisture": 0,
+    "request": ""
   }
 }
