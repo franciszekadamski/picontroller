@@ -1,0 +1,19 @@
+# Local Python virtual environments
+.venv/
+venv/
+env/
+
+# Python bytecode/cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Tool caches
+.mypy_cache/
+.pytest_cache/
+.pylint.d/
+
+# Editor/OS
+.vscode/
+.DS_Store
+Thumbs.db
