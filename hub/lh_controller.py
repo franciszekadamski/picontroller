@@ -14,9 +14,9 @@ class LHController(basic_controller.BasicController):
 
 
     def is_dry(self):
-        humidity_reading = self.send('humidity_sensor:read_humidity')
-        temperature_reading = self.send('humidity_sensor:read_temperature')
-        moisture_reading = self.send('moisture_sensor:read')
+        humidity_reading = self.send_device_command('humidity_sensor:read_humidity')
+        temperature_reading = self.send_device_command('humidity_sensor:read_temperature')
+        moisture_reading = self.send_device_command('moisture_sensor:read')
 
         def _parse_reading(reading: str, fallback: float, reading_name: str) -> float:
             try:
@@ -57,7 +57,7 @@ class LHController(basic_controller.BasicController):
             return False
 
 
-    def main(self):
+    def run_control_step(self):
         self.lighting_start_time = datetime.time(
             int(self.zmq_data_store['lighting_start_time_h']),
             int(self.zmq_data_store['lighting_start_time_min'])
@@ -71,20 +71,20 @@ class LHController(basic_controller.BasicController):
         if now - self.last_watering_check_time >= self.zmq_data_store['watering_interval_s']:
             self.last_watering_check_time = now
             if self.is_dry():
-                # answer = self.send('water_servo:swing')
-                self.send('water_servo:up')
+                # answer = self.send_device_command('water_servo:swing')
+                self.send_device_command('water_servo:up')
                 time.sleep(0.5)
-                self.send('water_servo:down')
+                self.send_device_command('water_servo:down')
 
         if self.is_light_time():
-            answer = self.send('light_servo:down')
+            answer = self.send_device_command('light_servo:down')
         else:
-            answer = self.send('light_servo:up')
+            answer = self.send_device_command('light_servo:up')
 
         if self.zmq_data_store['request']:
-            answer = self.send(self.zmq_data_store['request'])
+            answer = self.send_device_command(self.zmq_data_store['request'])
             self.zmq_data_store['request'] = ''
             time.sleep(0.5)
 
-        self.send('builtin_led:blink')
+        self.send_device_command('builtin_led:blink')
 

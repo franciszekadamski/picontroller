@@ -29,14 +29,14 @@ class PicoBoard:
                 nc.close()
 
 
-def read_board_ips(path: str):
+def get_board_ips_from_config(path: str):
     with open(path, 'r') as file:
         configuration = json.loads(file.read())
     return list(configuration['boards'].keys())
 
 
 def create_boards(path: str):
-    board_ips = read_board_ips(path)
+    board_ips = get_board_ips_from_config(path)
     boards = {}
     for board_ip in board_ips:
         boards[board_ip] = PicoBoard(board_ip, 1234)

@@ -8,20 +8,20 @@ CONFIGURATION_FILE_PATH = 'configuration.json'
 IP_FILE_PATH = 'board_ip.json'
 
 
-def setup_socket(board_ip: str) -> socket.socket:
+def setup_server_socket(board_ip: str) -> socket.socket:
     server = network_tools.NetworkServer(CONFIGURATION_FILE_PATH, board_ip)
     socket_conn = server.setup()
     socket_conn.settimeout(1.0)
     return socket_conn
 
-def configuration_settings() -> tuple[socket.socket, dict, str]:
+def initialize_runtime() -> tuple[socket.socket, dict, str]:
     board_ip = device_creation.read_ip(IP_FILE_PATH)
-    network_setup = setup_socket(board_ip)
+    network_setup = setup_server_socket(board_ip)
     devices = device_creation.create_devices(CONFIGURATION_FILE_PATH, board_ip)
     return network_setup, devices, board_ip
 
 def main() -> None:
-    network_setup, devices, board_ip = configuration_settings()
+    network_setup, devices, board_ip = initialize_runtime()
     
     while True:
         for device in devices.values():
@@ -34,7 +34,7 @@ def main() -> None:
         except OSError as e:
             print(f'Socket error: {e}')
             network_setup.close()
-            network_setup = setup_socket(board_ip)
+            network_setup = setup_server_socket(board_ip)
             continue
         
         try:

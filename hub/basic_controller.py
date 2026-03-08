@@ -27,7 +27,7 @@ class BasicController:
         self.zmq_data_store = configuration['zmq_data_store']
 
 
-    def send(self, message: str):
+    def send_device_command(self, message: str):
         try:
             device_name, _ = message.split(':', 1)
         except ValueError:
@@ -52,7 +52,7 @@ class BasicController:
             return f'ERROR:Board communication failed for {target_board_name}'
 
 
-    def handle_zmq(self):
+    def process_zmq_request(self):
         try:
             message = self.zmq_socket.recv_json(flags=zmq.NOBLOCK)
             if message.get('action') == 'get':
@@ -72,15 +72,15 @@ class BasicController:
     def main_loop(self):
         while True:
             try:
-                self.handle_zmq()
-                self.main()
+                self.process_zmq_request()
+                self.run_control_step()
             except (KeyError, TypeError, ValueError, OSError, zmq.ZMQError) as e:
                 self.logger.error(f'Controller loop error: {e}')
             finally:
                 time.sleep(self.zmq_data_store['main_loop_sleep_time_s'])
 
 
-    def main(self):
-        answer = self.send('builtin_led:blink')
+    def run_control_step(self):
+        answer = self.send_device_command('builtin_led:blink')
         print(answer)
 
