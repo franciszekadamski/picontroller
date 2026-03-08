@@ -1,3 +1,8 @@
-#!/usr/bin/bash
+#!/usr/bin/python3
 
-python3 -m 
+
+from textual_serve import server
+
+
+server = server.Server('python3 src.app.py', port=8001)
+server.serve()
