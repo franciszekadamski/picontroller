@@ -1,5 +1,5 @@
-import datetime
 import json
+import logging
 import time
 
 import zmq
@@ -9,6 +9,7 @@ from boards import PicoBoard, create_boards
 
 class BasicController:
     def __init__(self, configuration_file_path: str):
+        self.logger = logging.getLogger(self.__class__.__name__)
         self.boards = create_boards(configuration_file_path)
         with open(configuration_file_path, 'r') as file:
             configuration = json.loads(file.read())
@@ -27,11 +28,28 @@ class BasicController:
 
 
     def send(self, message: str):
-        device_name = message.split(':')[0]
-        target_board_name = self.device_board_map[device_name]
-        target_board = self.boards[target_board_name]
-        answer = target_board.send(message)
-        return answer
+        try:
+            device_name, _ = message.split(':', 1)
+        except ValueError:
+            self.logger.warning(f'Invalid command format: {message}')
+            return 'ERROR:Invalid command format'
+
+        target_board_name = self.device_board_map.get(device_name)
+        if target_board_name is None:
+            self.logger.warning(f'Unknown device in command: {device_name}')
+            return f'ERROR:Unknown device {device_name}'
+
+        target_board = self.boards.get(target_board_name)
+        if target_board is None:
+            self.logger.error(f'No board configured for IP: {target_board_name}')
+            return f'ERROR:Unknown board {target_board_name}'
+
+        try:
+            answer = target_board.send(message)
+            return answer
+        except (OSError, TimeoutError, ConnectionError) as e:
+            self.logger.error(f'Failed sending "{message}" to {target_board_name}: {e}')
+            return f'ERROR:Board communication failed for {target_board_name}'
 
 
     def handle_zmq(self):
@@ -43,8 +61,12 @@ class BasicController:
                 new_data = message.get('data', {})
                 self.zmq_data_store.update(new_data)
                 self.zmq_socket.send_json(self.zmq_data_store)
+            else:
+                self.zmq_socket.send_json({'error': 'unknown action'})
         except zmq.Again:
             pass
+        except (TypeError, ValueError, zmq.ZMQError) as e:
+            self.logger.error(f'ZMQ handling error: {e}')
 
 
     def main_loop(self):
@@ -52,8 +74,8 @@ class BasicController:
             try:
                 self.handle_zmq()
                 self.main()
-            except Exception as e:
-                print(f'there was an error: {e}')
+            except (KeyError, TypeError, ValueError, OSError, zmq.ZMQError) as e:
+                self.logger.error(f'Controller loop error: {e}')
             finally:
                 time.sleep(self.zmq_data_store['main_loop_sleep_time_s'])
 

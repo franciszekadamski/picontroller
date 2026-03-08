@@ -2,6 +2,8 @@
 
 import nclib
 import json
+import logging
+import socket
 
 
 class PicoBoard:
@@ -11,14 +13,20 @@ class PicoBoard:
 
 
     def send(self, message: str):
-        nc = nclib.Netcat((self.ip, self.port))
-        nc.send(message.encode())
+        nc = None
         try:
-            answer = nc.recv(timeout=5).decode()
-        except:
-            print(f'timeout. answer: {answer}')
-        nc.close()
-        return answer
+            nc = nclib.Netcat((self.ip, self.port))
+            nc.send(message.encode())
+            answer = nc.recv(timeout=5)
+            if not answer:
+                return 'ERROR:Empty response from board'
+            return answer.decode()
+        except (socket.timeout, TimeoutError, OSError, UnicodeDecodeError) as e:
+            logging.getLogger(__name__).error(f'Board communication error ({self.ip}:{self.port}): {e}')
+            return f'ERROR:Board communication failed for {self.ip}'
+        finally:
+            if nc is not None:
+                nc.close()
 
 
 def read_board_ips(path: str):

@@ -2,12 +2,11 @@ import datetime
 import json
 import time
 
-import zmq
 
-from basic_controller import BasicController
+import basic_controller
 
 
-class LHController(BasicController):
+class LHController(basic_controller.BasicController):
     def __init__(self, configuration_file_path: str):
         super().__init__(configuration_file_path)
 
@@ -19,32 +18,25 @@ class LHController(BasicController):
         temperature_reading = self.send('humidity_sensor:read_temperature')
         moisture_reading = self.send('moisture_sensor:read')
 
-        try:
-            humidity_p = float(humidity_reading.split(':')[1])
-        except Exception as e:
-            print(e)
-            humidity_p = 300
+        def _parse_reading(reading: str, fallback: float, reading_name: str) -> float:
+            try:
+                return float(reading.split(':', 1)[1])
+            except (AttributeError, IndexError, TypeError, ValueError) as e:
+                self.logger.warning(f'Failed to parse {reading_name} reading "{reading}": {e}')
+                return fallback
 
-        try:
-            temperature_c = float(temperature_reading.split(':')[1])
-        except Exception as e:
-            print(e)
-            temperature_c = 300
-
-        try:
-            moisture_raw = float(moisture_reading.split(':')[1])
-        except Exception as e:
-            print(e)
-            moisture_raw = 300
+        humidity_p = _parse_reading(humidity_reading, 300.0, 'humidity')
+        temperature_c = _parse_reading(temperature_reading, 300.0, 'temperature')
+        moisture_raw = _parse_reading(moisture_reading, 300.0, 'moisture')
 
         moisture_a = self.zmq_data_store['moisture_lr_a_factor']
         moisture_b = self.zmq_data_store['moisture_lr_b_factor']
 
         moisture_p = moisture_a * moisture_raw + moisture_b
 
-        print(f"humidity: {humidity_p}")
-        print(f"temperature: {temperature_c}")
-        print(f"moisture: {moisture_p}")
+        self.logger.info(f'humidity: {humidity_p}')
+        self.logger.info(f'temperature: {temperature_c}')
+        self.logger.info(f'moisture: {moisture_p}')
         self.zmq_data_store['humidity'] = humidity_p
         self.zmq_data_store['temperature'] = temperature_c
         self.zmq_data_store['moisture'] = moisture_p
