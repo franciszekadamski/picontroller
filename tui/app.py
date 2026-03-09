@@ -7,7 +7,7 @@ import zmq
 
 
 CONFIGURATION_FILE_PATH = 'configuration_files/configuration.json'
-with open('../hub_ip.json', 'r') as file:
+with open('hub_ip.json', 'r') as file:
     HUB_IP = json.loads(file.read())['hub_ip']
 
 
@@ -130,6 +130,10 @@ class MainApp(app.App):
 
 
 if __name__ == "__main__":
-    app = MainApp()
-    app.run()
+    try:
+        app = MainApp()
+        app.run()
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
 

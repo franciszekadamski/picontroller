@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+
+textual serve --host 0.0.0.0 --command "python3 src/app.py"
