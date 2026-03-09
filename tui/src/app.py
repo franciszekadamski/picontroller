@@ -11,55 +11,7 @@ with open('../hub_ip.json', 'r') as file:
     HUB_IP = json.loads(file.read())['hub_ip']
 
 
-def get_zmq_socket():
-    context = zmq.Context()
-    socket = context.socket(zmq.REQ)
-    socket.setsockopt(zmq.RCVTIMEO, 5000)
-    socket.setsockopt(zmq.SNDTIMEO, 5000)
-    socket.connect(f'tcp://{HUB_IP}:5555')
-    return socket
 
-
-def send_and_receive(socket, payload):
-    try:
-        socket.send_json(payload)
-        return socket.recv_json()
-    except zmq.ZMQError:
-        socket.close()
-        return None
-
-
-def data_to_rows(data):
-    rows = [('Key', 'Value')]
-    for key, value in data.items():
-        rows.append((key, value))
-    return rows
-
-
-def client(action, key=None, value=None):
-    if action not in ['get', 'set', 'save']:
-        print(f'possible actions are: get, set, save')
-        return
-    data = send_and_receive(socket, {'action': 'get'})
-    if not data:
-        raise Exception('Could not read data')
-
-    if action == 'get':
-        return data_to_rows(data)
-    elif action == 'set':
-        try:
-            data[key] = float(value)
-        except ValueError:
-            data[key] = str(value)
-        payload = {
-            'action': 'set',
-            'data': data
-        }
-        data = send_and_receive(socket, payload)
-        return data_to_rows(data)
-    elif action == 'save':
-        data = send_and_receive(socket, {'action': 'save'})
-        return data_to_rows(data)
 
 
 class MainApp(app.App):
@@ -89,9 +41,8 @@ class MainApp(app.App):
     
     @textual.on(widgets.Input.Submitted)
     def update_value(self, input_value: str):
-        global rows
-        key = rows[self.table.cursor_coordinate.row + 1][0]
-        new_rows = client('set', key, input_value.value)[1:]
+        key = self.rows[self.table.cursor_coordinate.row][0]
+        new_rows = self.client('set', key, input_value.value)[1:]
         for row_index in range(len(new_rows)):
             self.table.update_cell_at(
                 textual.coordinate.Coordinate(row=row_index, column=1),
@@ -102,7 +53,7 @@ class MainApp(app.App):
 
 
     def on_button_pressed(self, event: widgets.Button.Pressed) -> None:
-        new_rows = client('get')[1:]
+        new_rows = self.client('get')[1:]
         for row_index in range(len(new_rows)):
             self.table.update_cell_at(
                 textual.coordinate.Coordinate(row=row_index, column=1),
@@ -112,17 +63,70 @@ class MainApp(app.App):
 
 
     def on_mount(self) -> None:
+        self.socket = self.get_zmq_socket()
         self.title = 'Picontroller TUI'
 
+        self.rows = [('Key', 'Value')]
         self.table = self.query_one(widgets.DataTable)
         self.table.cursor_type = 'row'
         self.table.zebra_stripes = False
-        self.table.add_columns(*rows[0])
-        self.table.add_rows(rows[1:])
+        self.table.add_columns(*self.rows[0])
 
+        self.rows = self.client('get')[1:]
+        self.table.add_rows(self.rows)
+
+
+    def get_zmq_socket(self):
+        context = zmq.Context()
+        socket = context.socket(zmq.REQ)
+        socket.setsockopt(zmq.RCVTIMEO, 5000)
+        socket.setsockopt(zmq.SNDTIMEO, 5000)
+        socket.connect(f'tcp://{HUB_IP}:5555')
+        return socket
+    
+    
+    def send_and_receive(self, payload):
+        try:
+            self.socket.send_json(payload)
+            return self.socket.recv_json()
+        except zmq.ZMQError:
+            self.socket.close()
+            return None
+    
+    
+    def data_to_rows(self, data):
+        rows = [('Key', 'Value')]
+        for key, value in data.items():
+            rows.append((key, value))
+        return rows
+    
+     
+    def client(self, action, key=None, value=None):
+        if action not in ['get', 'set', 'save']:
+            print(f'possible actions are: get, set, save')
+            return
+        data = self.send_and_receive({'action': 'get'})
+        if not data:
+            raise Exception('Could not read data')
+    
+        if action == 'get':
+            return self.data_to_rows(data)
+        elif action == 'set':
+            try:
+                data[key] = float(value)
+            except ValueError:
+                data[key] = str(value)
+            payload = {
+                'action': 'set',
+                'data': data
+            }
+            data = self.send_and_receive(payload)
+            return self.data_to_rows(data)
+        elif action == 'save':
+            data = self.send_and_receive({'action': 'save'})
+            return self.data_to_rows(data)
         
-socket = get_zmq_socket()
-rows = client('get') 
+
 
 
 if __name__ == "__main__":
