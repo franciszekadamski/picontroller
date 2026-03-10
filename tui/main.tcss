@@ -1,0 +1,7 @@
+#datastorelist {
+    width: 60%
+}
+
+#inputfield {
+    width: 40%
+}

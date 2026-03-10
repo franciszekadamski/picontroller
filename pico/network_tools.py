@@ -23,6 +23,9 @@ def setup_network_connection(path: str, board_ip: str):
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
 
+    # 0xa11140 is a magic hex to disable power saving on the CYW43 chip
+    wlan.config(pm=0xa11140)
+
     wlan.ifconfig(
         (
             network_configuration.ip,
