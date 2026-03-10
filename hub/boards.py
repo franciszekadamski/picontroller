@@ -14,14 +14,8 @@ class PicoBoard:
     def _connect(self):
         if self.nc is None:
             try:
-                # Set a global timeout for the NEXT socket creation (the connection)
                 socket.setdefaulttimeout(2.0)
-                
-                # Now create the Netcat object
                 self.nc = nclib.Netcat((self.ip, self.port))
-                
-                # Set the timeout back to None (or your preferred default) 
-                # so other parts of your Pi script aren't affected
                 socket.setdefaulttimeout(None)
                 return True
             except Exception as e:
@@ -35,8 +29,6 @@ class PicoBoard:
             return "Error: No Connection"
         try:
             self.nc.send(f"{message}\n".encode())
-            
-            # This is the ONLY place nclib officially supports a timeout argument
             answer = self.nc.recv(timeout=1.0).decode().strip()
             return answer
         except Exception as e:
