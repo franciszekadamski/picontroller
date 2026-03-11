@@ -1,3 +1,7 @@
 #!/usr/bin/bash
 
+set -a
+source configuration.env
+set +a
+
 $PICONTROLLER_PROJECT_PATH/hub/main.py

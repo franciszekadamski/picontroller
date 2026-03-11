@@ -1,7 +1,6 @@
 #!/usr/bin/bash
 
 
-export PICONTROLLER_HUB_IP="192.168.0.56"
-export PICONTROLLER_CONFIGURATION_PATH="$HOME/picontroller/configuration_files/configuration.json"
-export PICONTROLLER_HUB_USER="pi"
-export PICONTROLLER_PROJECT_PATH="$HOME/picontroller"
+set -a
+source configuration.env
+set +a
