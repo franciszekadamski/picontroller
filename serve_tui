@@ -1,4 +1,0 @@
-#!/usr/bin/bash
-
-
-/home/pi/.local/bin/textual serve --host 0.0.0.0 --command "python3 tui/app.py"

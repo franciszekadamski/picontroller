@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-ExecStart=/home/pi/picontroller/serve_tui
+ExecStart=/home/pi/picontroller/scripts/picontroller
 WorkingDirectory=/home/pi/picontroller
 User=pi
 Restart=always

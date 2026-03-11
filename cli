@@ -2,16 +2,16 @@
 
 
 import json
+import os
 import time
 
 import click
 import zmq
 
 
-CONFIGURATION_FILE_PATH = 'configuration_files/configuration.json'
+CONFIGURATION_FILE_PATH = os.environ['PICONTROLLER_CONFIGRATION_PATH']
+HUB_IP = os.environ['PICONTROLLER_HUB_IP']
 
-with open('hub_ip.json', 'r') as file:
-    HUB_IP = json.loads(file.read())['hub_ip']
 
 def get_zmq_socket():
     context = zmq.Context()

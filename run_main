@@ -1,4 +1,0 @@
-#!/usr/bin/bash
-
-mpremote run pico/main.py --no-repl
-
