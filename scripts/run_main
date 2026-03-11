@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+mpremote run $PICONTROLLER_PROJECT_PATH/pico/main.py --no-repl
+

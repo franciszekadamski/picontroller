@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+
+/home/$PICONTROLLER_HUB_USER/.local/bin/textual serve --host 0.0.0.0 --command "python3 $PICONTROLLER_PROJECT_PATH/tui_app/app.py"

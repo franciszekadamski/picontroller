@@ -1,7 +1,0 @@
-#!/usr/bin/bash
-
-./scripts/upload_scripts.sh "pico"
-./scripts/upload_board_ip.sh "board_ip.json"
-./scripts/upload_configuration.sh "configuration_files/configuration.json"
-sleep 1
-./run_main

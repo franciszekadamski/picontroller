@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+
+
+set -a
+source $HOME/picontroller_user/configuration.env
+set +a

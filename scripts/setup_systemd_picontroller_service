@@ -1,0 +1,12 @@
+#!/usr/bin/bash
+
+
+./scripts/export_variables
+
+envsubst < $PICONTROLLER_PROJECT_PATH/systemd_services/picontroller.service.template | sudo tee /etc/systemd/system/picontroller.service > /dev/null
+
+
+sudo systemctl daemon-reexec
+sudo systemctl daemon-reload
+sudo systemctl enable picontroller.service
+sudo systemctl start picontroller.service

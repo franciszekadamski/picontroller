@@ -1,4 +1,5 @@
 import json
+import os
 import time
 
 import textual
@@ -6,10 +7,8 @@ from textual import app, containers, events, widgets
 import zmq
 
 
-CONFIGURATION_FILE_PATH = 'configuration_files/configuration.json'
-with open('hub_ip.json', 'r') as file:
-    HUB_IP = json.loads(file.read())['hub_ip']
-
+CONFIGURATION_FILE_PATH = os.environ['PICONTROLLER_CONFIGURATION_PATH']
+HUB_IP = os.environ['PICONTROLLER_HUB_IP']
 
 
 

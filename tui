@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+python3 "$PICONTROLLER_PROJECT_PATH/tui_app/app.py"

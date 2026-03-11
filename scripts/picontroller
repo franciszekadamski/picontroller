@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+./scripts/export_variables
+
+/home/$PICONTROLLER_HUB_USER/picontroller_user/main.py

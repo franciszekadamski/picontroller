@@ -38,7 +38,7 @@ while True:
                 
                 try:
                     decoded_data = data.decode().strip()
-                    device_name, command = decoded_data.split(':')
+                    device_name, command = decoded_data.split(':')[:2]
                     
                     if device_name in devices:
                         returned_value = devices[device_name](command)

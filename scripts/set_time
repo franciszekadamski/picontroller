@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+NOW=$(date '+%Y-%m-%d %H:%M:%S')
+ssh "$PICONTROLLER_HUB_USER@$PICONTROLLER_HUB_IP" "sudo date --set=\"${NOW}\""
