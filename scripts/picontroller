@@ -1,7 +1,5 @@
 #!/usr/bin/bash
 
-set -a
-source configuration.env
-set +a
+./scripts/export_variables
 
 $PICONTROLLER_PROJECT_PATH/hub/main.py
