@@ -1,5 +1,5 @@
 [Unit]
-Dscription=Run Picontroller
+Description=Run Picontroller
 After=network-online.target
 Wants=network-online.target
 
