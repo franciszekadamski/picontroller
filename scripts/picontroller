@@ -2,4 +2,4 @@
 
 ./scripts/export_variables
 
-$PICONTROLLER_PROJECT_PATH/hub/main.py
+/home/$PICONTROLLER_HUB_USER/picontroller_user/main.py
