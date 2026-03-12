@@ -28,8 +28,17 @@ class PicoBoard:
         if not self._connect():
             return "Error: No Connection"
         try:
+            while True:
+                try:
+                    junk = self.nc.recv(timeout=0.01)
+                    if not junk:
+                        break
+                except:
+                    break
             self.nc.send(f"{message}\n".encode())
-            answer = self.nc.recv(timeout=1.0).decode().strip()
+            answer = self.nc.recv(timeout=1.0).decode().strip() 
+            if '\n' in answer:
+                answer = answer.split('\n')[:-1].strip()
             return answer
         except Exception as e:
             print(f"Socket error on {self.ip}: {e}")
