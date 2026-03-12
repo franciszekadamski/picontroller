@@ -38,7 +38,15 @@ class PicoBoard:
             self.nc.send(f"{message}\n".encode())
             answer = self.nc.recv(timeout=1.0).decode().strip() 
             if '\n' in answer:
-                answer = answer.split('\n')[:-1].strip()
+                print(f'Error: new line in answer; for message {message} got answer {answer}')
+                answer = answer.split('\n')[-1].strip()
+                print(f'fixed answer: {answer}')
+            if ':' not in answer:
+                print(f'Error: lack of delimieter; for message {message} got answer {answer} that is lacking : delimiter')
+                return "error:wrong_format"
+            elif answer.split(':')[0] != message.split(':')[0]:
+                print(f'Error: wrong device; for message {message} got answer {answer}')
+                return "error:wrong_device"
             return answer
         except Exception as e:
             print(f"Socket error on {self.ip}: {e}")
