@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-ExecStart=bash -c "${PICONTROLLER_PROJECT_PATH}/scripts/picontroller ${PICONTROLLER_CONFIGURATION_PATH}"
+ExecStart=${PICONTROLLER_PROJECT_PATH}/scripts/picontroller ${PICONTROLLER_CONFIGURATION_PATH}
 WorkingDirectory=${PICONTROLLER_PROJECT_PATH}
 User=${PICONTROLLER_HUB_USER}
 Restart=always
