@@ -37,6 +37,8 @@ grep -q "PICONTROLLER_PROJECT_PATH=" "$CONF_FILE" || echo "PICONTROLLER_PROJECT_
 
 export PICONTROLLER_CONFIGURATION_PATH=$HOME/user_configuration
 
+grep -q "PICONTROLLER_CONFIGURATION_PATH=" "$CONF_FILE" || echo "PICONTROLLER_CONFIGURATION_PATH=$PICONTROLLER_CONFIGURATION_PATH" >> "$CONF_FILE"
+
 sudo systemctl stop picontroller.service
 sudo systemctl stop picontrollerserver.service
 sudo systemctl disable picontroller.service
