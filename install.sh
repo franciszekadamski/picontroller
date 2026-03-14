@@ -3,8 +3,8 @@
 mkdir -p $HOME/.local/share/picontroller
 cd $HOME/.local/share/
 git clone https://github.com/franciszekadamski/picontroller.git
-git checkout 18-prepare-installation-script
 cd $HOME/.local/share/picontroller
+git checkout 18-prepare-installation-script
 echo "export PICONTROLLER_PROJECT_PATH=$HOME/.local/share/picontroller" >> $HOME/.bashrc
 echo "export PATH=$PATH:$HOME/.local/share/picontroller" >> $HOME/.bashrc
 
