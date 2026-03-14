@@ -1,3 +1,4 @@
+# code from https://github.com/micropython/micropython-lib/blob/master/micropython/umqtt.simple/umqtt/simple.py
 import socket
 import struct
 from binascii import hexlify

@@ -1,3 +1,4 @@
+# code from https://github.com/micropython/micropython-lib/blob/master/micropython/umqtt.robust/umqtt/robust.py
 import time
 import simple
 
