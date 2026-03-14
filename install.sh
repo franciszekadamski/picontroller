@@ -7,11 +7,10 @@ cd $HOME/.local/share/picontroller
 git checkout 18-prepare-installation-script
 
 export PICONTROLLER_PROJECT_PATH=$HOME/.local/share/picontroller
-
-echo "\n project path: $PICONTROLLER_PROJECT_PATH"
+export PATH=$PATH:$PICONTROLLER_PROJECT_PATH
 
 echo "export PICONTROLLER_PROJECT_PATH=$PICONTROLLER_PROJECT_PATH" >> $HOME/.bashrc
-echo "export PATH=$PATH:$PICONTROLLER_PROJECT_PATH" >> $HOME/.bashrc
+echo 'export PATH=$PATH:$PICONTROLLER_PROJECT_PATH' >> $HOME/.bashrc
 
 source $HOME/.bashrc
 
