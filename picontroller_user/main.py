@@ -16,6 +16,6 @@ from basic_controller import BasicController
 
 
 if __name__ == "__main__":
-    controller = BasicController(os.environ['PICONTROLLER_CONFIGURATION_PATH'])
+    controller = BasicController(f"os.environ['PICONTROLLER_CONFIGURATION_PATH']/configuration.json")
     controller.main_loop()
 

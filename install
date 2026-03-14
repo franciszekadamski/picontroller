@@ -1,14 +1,10 @@
 #!/usr/bin/bash
 
+
+export PICONTROLLER_CONFIGURATION_PATH=$1
 source ./scripts/export_variables
 ./scripts/install_mqtt_on_hub
 ./scripts/install_python_packages
 ./scripts/setup_systemd_picontroller_service
-./setup_systemd_picontrollerserver_service
-
-if [ ! -d "$HOME/picontroller_user" ]; then
-    echo "$HOME/picontroller_user directory not found, copying sample dir"
-    cp -r ./picontroller_user $HOME/picontroller_user
-fi
-
+./scripts/setup_systemd_picontrollerserver_service
 

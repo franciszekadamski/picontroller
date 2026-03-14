@@ -1,5 +1,4 @@
 #!/usr/bin/bash
 
-source ./scripts/export_variables
-
-/home/$PICONTROLLER_HUB_USER/picontroller_user/main.py
+export PICONTROLLER_CONFIGURATION_PATH=$1
+$PICONTROLLER_CONFIGURATION_PATH/main.py

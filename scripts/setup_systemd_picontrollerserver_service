@@ -1,8 +1,7 @@
 #!/usr/bin/bash
 
 
-echo "Installingg picontrollerserver.service"
-./scripts/export_variables
+echo "Installing picontrollerserver.service"
 
 envsubst < $PICONTROLLER_PROJECT_PATH/systemd_services/picontrollerserver.service.template | sudo tee /etc/systemd/system/picontrollerserver.service > /dev/null
 
