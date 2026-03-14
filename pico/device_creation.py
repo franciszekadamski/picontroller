@@ -38,3 +38,7 @@ def create_devices(file_path: str, board_ip: str):
 def read_ip(file_path: str):
     with open(file_path, 'r') as file:
         return json.loads(file.read())['board_ip']
+
+def read_hub_ip(file_path: str):
+    with open(file_path, 'r') as file:
+        return json.loads(file.read())['network']['hub_ip']

@@ -3,6 +3,7 @@ import json
 import time
 
 import zmq
+import paho.mqtt.client as mqtt
 
 from boards import PicoBoard, create_boards
 
@@ -10,7 +11,11 @@ from boards import PicoBoard, create_boards
 class BasicController:
     def __init__(self, configuration_file_path: str):
         self.configuration_file_path = configuration_file_path
-        self.boards = create_boards(self.configuration_file_path)
+        self.mqtt_client = mqtt.Client()
+        self.mqtt_client.connect('127.0.0.1', 1883)
+        self.mqtt_client.loop_start()
+        print('mqtt client is set up and its looop has started')
+        self.boards = create_boards(self.configuration_file_path, self.mqtt_client)
         with open(self.configuration_file_path, 'r') as file:
             self.configuration = json.loads(file.read())
 
@@ -32,6 +37,7 @@ class BasicController:
         target_board_name = self.device_board_map[device_name]
         target_board = self.boards[target_board_name]
         answer = target_board.send(message)
+        print(answer)
         return answer
 
 

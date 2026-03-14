@@ -1,6 +1,5 @@
 import network
 import time
-import socket
 import json
 
 
@@ -52,19 +51,4 @@ def setup_network_connection(path: str, board_ip: str):
         print("Connected! IP:", wlan.ifconfig()[0])
     else:
         print("Failed to connect")
-
-
-    address = socket.getaddrinfo('0.0.0.0', 1234)[0][-1]
-
-    while True:
-        try:
-            s = socket.socket()
-            s.settimeout(10.0)
-            s.bind(address)
-            s.listen(1)
-            print('Listening on', address) 
-            return s
-        except:
-            print('could not bind to the address, retrying')
-            time.sleep(1)
 
