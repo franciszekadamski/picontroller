@@ -37,7 +37,7 @@ class BasicController:
         target_board_name = self.device_board_map[device_name]
         target_board = self.boards[target_board_name]
         answer = target_board.send(message)
-        print(answer)
+        # print(answer)
         return answer
 
 
@@ -72,5 +72,5 @@ class BasicController:
 
     def main(self):
         answer = self.send('builtin_led:blink')
-        print(answer)
+        # print(answer)
 

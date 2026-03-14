@@ -24,7 +24,7 @@ devices = create_devices(CONFIGURATION_FILE_PATH, BOARD_IP)
 client = MQTTClient(BOARD_IP, HUB_IP, keepalive=60)
 
 def sub_callback(topic, message):
-    print(f'Received command: {topic} -> {message}')
+    # print(f'Received command: {topic} -> {message}')
 
     decoded_data = message.decode().strip()
     device_name, command = decoded_data.split(':')[:2]
@@ -33,10 +33,10 @@ def sub_callback(topic, message):
         returned_value = devices[device_name](command)
         response_message = f'{device_name}:{returned_value}'
         client.publish(f'pico/{BOARD_IP}/response', response_message)
-        print('response sent back to broker')
+        # print('response sent back to broker')
     else:
         client.publish(f'pico/{BOARD_IP}/response', 'error:device_not_found')
-        print('response sent back to broker')
+        # print('response sent back to broker')
 
 client.set_callback(sub_callback)
 
