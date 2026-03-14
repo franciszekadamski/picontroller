@@ -9,7 +9,7 @@ import click
 import zmq
 
 
-CONFIGURATION_FILE_PATH = os.environ['PICONTROLLER_CONFIGURATION_PATH']
+CONFIGURATION_FILE_PATH = f"os.environ['PICONTROLLER_CONFIGURATION_PATH']/configuration.json"
 HUB_IP = os.environ['PICONTROLLER_HUB_IP']
 
 

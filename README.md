@@ -3,6 +3,27 @@
 Picontroller is a tool orchestrating rpi picos, their sensors and actuators,
 and a hub with controller running on a server, via a simple API.
 
+## Quick installation
+
+Run below script:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/franciszekadamski/picontroller/refs/heads/develop/install_picontroller.bash | bash
+```
+
+Source your `$HOME/.bashrc`.
+Edit `configuration.json` and `configuration.env` files that should appear in `$HOME/user_configuration` directory.
+
+With your Pico W connected by USB run:
+
+```bash
+$PICONTROLLER_PROJECT_PATH/scripts/uprun
+```
+
+If configuration files are correctly edited, you should see blinking of the main LED on your Pico W.
+
+> For now it is only available for Ubuntu and Debian.
+
 ## The idea
 
 Imagine that in your multi-room house you have old lamps with switches on their

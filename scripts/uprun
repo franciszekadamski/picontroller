@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 $PICONTROLLER_PROJECT_PATH/scripts/upload_scripts.sh "$PICONTROLLER_PROJECT_PATH/pico"
-# $PICONTROLLER_PROJECT_PATH/scripts/upload_board_ip.sh "$PICONTROLLER_PROJECT_PATH/pico/board_ip.json"
-$PICONTROLLER_PROJECT_PATH/scripts/upload_configuration.sh "$PICONTROLLER_CONFIGURATION_PATH"
+$PICONTROLLER_PROJECT_PATH/scripts/upload_board_ip.sh "$PICONTROLLER_CONFIGURATION_PATH/board_ip.json"
+$PICONTROLLER_PROJECT_PATH/scripts/upload_configuration.sh "$PICONTROLLER_CONFIGURATION_PATH/configuration.json"
 sleep 1
 $PICONTROLLER_PROJECT_PATH/scripts/run_main

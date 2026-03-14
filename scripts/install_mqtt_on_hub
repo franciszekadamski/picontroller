@@ -1,6 +1,7 @@
 #!/usr/bin/bash
 
+echo "Installing mqtt"
 sudo apt update
 sudo apt install mosquitto mosquitto-clients
 sudo systemctl enable mosquitto
-pip3 install paho-mqtt
+echo "Mqtt installed and enabled"

@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+echo 'I cannot help you with my magic yet. I can only thell you that you will'
+echo 'find your spells in $PICONTROLLER_PROJECT_PATH/scripts directory'
+echo 'Remember to source your $HOME/.bashrc !'

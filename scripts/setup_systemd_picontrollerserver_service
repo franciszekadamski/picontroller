@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 
-./scripts/export_variables
+echo "Installing picontrollerserver.service"
 
 envsubst < $PICONTROLLER_PROJECT_PATH/systemd_services/picontrollerserver.service.template | sudo tee /etc/systemd/system/picontrollerserver.service > /dev/null
 
@@ -9,3 +9,5 @@ sudo systemctl daemon-reexec
 sudo systemctl daemon-reload
 sudo systemctl enable picontrollerserver.service
 sudo systemctl start picontrollerserver.service
+echo "picontrollerserver.service installed and enabled"
+

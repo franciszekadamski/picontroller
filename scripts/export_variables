@@ -1,6 +1,8 @@
 #!/usr/bin/bash
 
 
+echo "Exporting evironment configuration"
 set -a
-source $HOME/picontroller_user/configuration.env
+source $PICONTROLLER_CONFIGURATION_PATH/configuration.env
 set +a
+echo "Exported environment configuration"
