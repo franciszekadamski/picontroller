@@ -1,4 +1,4 @@
 #!/usr/bin/bash
 
 echo "Installing python packages"
-sudo -u $PICONTROLLER_HUB_USER pip3 install --requirement requirements.txt
+sudo -u $PICONTROLLER_HUB_USER pip3 install --requirement $PICONTROLLER_PROJECT_PATH/requirements.txt

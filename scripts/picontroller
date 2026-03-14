@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
 export PICONTROLLER_CONFIGURATION_PATH=$1
-source ./scripts/export_variables
+source $PICONTROLLER_PROJECT_PATH/scripts/export_variables
 
 $PICONTROLLER_CONFIGURATION_PATH/main.py
