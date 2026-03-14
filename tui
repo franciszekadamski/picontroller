@@ -1,3 +1,6 @@
 #!/usr/bin/bash
 
+export PICONTROLLER_CONFIGURATION_PATH=$1
+source ./scripts/export_variables
+
 python3 "$PICONTROLLER_PROJECT_PATH/tui_app/app.py"
