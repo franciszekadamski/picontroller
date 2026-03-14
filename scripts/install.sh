@@ -22,7 +22,7 @@ fi
 
 source $HOME/.bashrc
 
-if [ ! -d $HOME/user_configuration]; then
+if [ ! -d "$HOME/user_configuration" ]; then
     cp -r $PICONTROLLER_PROJECT_PATH/user_configuration $HOME/
 fi
 
@@ -45,7 +45,7 @@ sudo systemctl disable picontrollerserver.service
 sudo rm /etc/systemd/system/picontroller.service
 sudo rm /etc/systemd/system/picontrollerserver.service
 
-picontroller_setup $PICONTROLLER_CONFIGURATION_PATH
+$PICONTROLLER_PROJECT_PATH/scripts/picontroller_setup $PICONTROLLER_CONFIGURATION_PATH
 
 echo $(systemctl status picontroller.service)
 echo $(systemctl status picontrollerserver.service)
