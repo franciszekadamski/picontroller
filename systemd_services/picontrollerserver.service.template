@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-ExecStart=${PICONTROLLER_PROJECT_PATH}/scripts/serve_tui
+ExecStart=bash -c "${PICONTROLLER_PROJECT_PATH}/scripts/serve_tui"
 WorkingDirectory=${PICONTROLLER_PROJECT_PATH}
 User=${PICONTROLLER_HUB_USER}
 Restart=always
