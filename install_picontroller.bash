@@ -20,6 +20,10 @@ if ! grep -q 'PATH=\$PATH:\$PICONTROLLER_PROJECT_PATH' "$HOME/.bashrc"; then
 	  echo 'export PATH=$PATH:$PICONTROLLER_PROJECT_PATH' >> "$HOME/.bashrc"
 fi
 
+if ! grep -q 'PATH=\$PATH:\$PICONTROLLER_CONFIGURATION_PATH' "$HOME/.bashrc"; then
+	  echo 'export PATH=$PATH:$PICONTROLLER_CONFIGURATION_PATH' >> "$HOME/.bashrc"
+fi
+
 source $HOME/.bashrc
 
 if [ ! -d "$HOME/user_configuration" ]; then
