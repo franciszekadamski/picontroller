@@ -9,13 +9,12 @@ import time
 
 import zmq
 
-picontroller_hub_user = os.environ['PICONTROLLER_HUB_USER']
-sys.path.insert(0, f'/home/{picontroller_hub_user}/picontroller/hub')
+sys.path.insert(0, f'{os.environ["PICONTROLLER_PROJECT_PATH"]}/hub')
 
 from basic_controller import BasicController
 
 
 if __name__ == "__main__":
-    controller = BasicController(f"os.environ['PICONTROLLER_CONFIGURATION_PATH']/configuration.json")
+    controller = BasicController(f"{os.environ['PICONTROLLER_CONFIGURATION_PATH']}/configuration.json")
     controller.main_loop()
 
