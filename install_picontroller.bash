@@ -51,6 +51,11 @@ sudo rm /etc/systemd/system/picontrollerserver.service
 
 $PICONTROLLER_PROJECT_PATH/scripts/picontroller_setup $PICONTROLLER_CONFIGURATION_PATH
 
+grep -q "listener 1883" "/etc/mosquitto/mosquitto.conf" || echo "listener 1883" | sudo tee -a "/etc/mosquitto/mosquitto.conf"
+grep -q "allow_anonymous true" "/etc/mosquitto/mosquitto.conf" || echo "allow_anonymous true" | sudo tee -a "/etc/mosquitto/mosquitto.conf"
+
+sudo ufw allow 1883/tcp
+
 echo $(systemctl status picontroller.service)
 echo $(systemctl status picontrollerserver.service)
 
