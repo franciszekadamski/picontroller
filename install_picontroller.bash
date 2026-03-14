@@ -21,8 +21,8 @@ if ! grep -q 'PATH=\$PATH:\$PICONTROLLER_PROJECT_PATH' "$HOME/.bashrc"; then
 	  echo 'export PATH=$PATH:$PICONTROLLER_PROJECT_PATH' >> "$HOME/.bashrc"
 fi
 
-if ! grep -q 'PATH=\$PATH:\$PICONTROLLER_CONFIGURATION_PATH' "$HOME/.bashrc"; then
-	  echo 'export PATH=$PATH:$PICONTROLLER_CONFIGURATION_PATH' >> "$HOME/.bashrc"
+if ! grep -q "PICONTROLLER_CONFIGURATION_PATH=" "$HOME/.bashrc"; then
+	  echo "export PICONTROLLER_CONFIGURATION_PATH=$PICONTROLLER_CONFIGURATION_PATH" >> "$HOME/.bashrc"
 fi
 
 source $HOME/.bashrc
