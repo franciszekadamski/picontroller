@@ -45,7 +45,7 @@ class Sensor:
 
     def __call__(self, command: str):
         if command not in self.commands:
-            print(f'unknown command {command}')
+            # print(f'unknown command {command}')
             return 'FAILED'
         elif command == 'read':
             return self.read()
