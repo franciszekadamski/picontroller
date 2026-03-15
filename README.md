@@ -12,7 +12,7 @@ curl -fsSL https://raw.githubusercontent.com/franciszekadamski/picontroller/refs
 ```
 
 Source your `$HOME/.bashrc`.
-Edit `configuration.json` and `configuration.env` files that should appear in `$HOME/user_configuration` directory.
+Edit `configuration.json` and `configuration.env` files that should appear in `$HOME/.config/picontroller` directory.
 
 With your Pico W connected by USB run:
 

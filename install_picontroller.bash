@@ -6,12 +6,16 @@ cd $HOME/.local/share/
 
 git clone https://github.com/franciszekadamski/picontroller.git
 cd $HOME/.local/share/picontroller
-git checkout 18-prepare-installation-script
+git checkout develop
 
 export PICONTROLLER_PROJECT_PATH=$HOME/.local/share/picontroller
 export PATH=$PATH:$PICONTROLLER_PROJECT_PATH
-export PICONTROLLER_CONFIGURATION_PATH=$HOME/user_configuration
+export PICONTROLLER_CONFIGURATION_PATH=$HOME/.config/picontroller/
 
+if [ ! -d "$PICONTROLLER_CONFIGURATION_PATH" ]; then
+    mkdir -p $PICONTROLLER_CONFIGURATION_PATH
+    cp $PICONTROLLER_PROJECT_PATH/user_configuration/* $PICONTROLLER_CONFIGURATION_PATH/
+fi
 
 if ! grep -q "PICONTROLLER_PROJECT_PATH=" "$HOME/.bashrc"; then
 	  echo "export PICONTROLLER_PROJECT_PATH=$PICONTROLLER_PROJECT_PATH" >> "$HOME/.bashrc"
@@ -27,11 +31,7 @@ fi
 
 source $HOME/.bashrc
 
-if [ ! -d "$HOME/user_configuration" ]; then
-    cp -r $PICONTROLLER_PROJECT_PATH/user_configuration $HOME/
-fi
-
-CONF_FILE="$HOME/user_configuration/configuration.env"
+CONF_FILE="$HOME/.config/picontroller/configuration.env"
 
 grep -q "PICONTROLLER_HUB_IP=" "$CONF_FILE" || echo "PICONTROLLER_HUB_IP=127.0.0.1" >> "$CONF_FILE"
 
