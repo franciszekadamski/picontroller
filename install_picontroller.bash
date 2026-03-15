@@ -6,7 +6,7 @@ cd $HOME/.local/share/
 
 git clone https://github.com/franciszekadamski/picontroller.git
 cd $HOME/.local/share/picontroller
-git checkout develop
+git checkout 20-add-high-sensor
 
 export PICONTROLLER_PROJECT_PATH=$HOME/.local/share/picontroller
 export PATH=$PATH:$PICONTROLLER_PROJECT_PATH
