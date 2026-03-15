@@ -65,7 +65,7 @@ class OnOffSensor(Sensor):
 
     def read(self):
         try:
-            raw_value = self.sensor.read_u16()
+            raw_value = self.sensor.value()
             return raw_value
         except OSError as e:
             pass
