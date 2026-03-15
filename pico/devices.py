@@ -55,6 +55,30 @@ class Sensor:
         pass
 
 
+class OnOffSensor(Sensor):
+    def __init__(self, device_specification: dict):
+        self.sensor = machine.Pin(device_specification['sensor_pin_number'], machine.Pin.IN)
+        self.power = machine.Pin(device_specification['power_pin_number_3_3_v'], machine.Pin.OUT)
+        self.commands = ['read']
+        self.power_up()
+
+
+    def read(self):
+        try:
+            raw_value = self.sensor.value()
+            return raw_value
+        except OSError as e:
+            pass
+
+
+    def __call__(self, command: str):
+        if command not in self.commands:
+            # print(f'unknown command {command}')
+            return 'FAILED'
+        elif command == 'read':
+            return self.read()
+
+
 class DHT11Sensor(Sensor):
     def __init__(self, device_specification: dict):
         self.power = machine.Pin(
