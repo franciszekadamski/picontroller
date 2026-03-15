@@ -1,6 +1,6 @@
 import json
 
-from devices import Sensor, DHT11Sensor, Servo, BuiltinLED, OnOffDevice
+from devices import Sensor, DHT11Sensor, Servo, BuiltinLED, OnOffDevice, OnOffSensor
 
 
 DEVICE_TYPES = ['sensor', 'dht11_sensor', 'servo', 'builtinled', 'onoffdevice', 'onoffsensor']
