@@ -1,3 +1,4 @@
+import gc
 import machine
 import network
 import utime
@@ -71,4 +72,6 @@ while True:
         while not success:
             time.sleep(5)
             success = connect_and_subscribe()
+    finally:
+        gc.collect()
 
