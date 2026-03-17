@@ -33,10 +33,10 @@ def sub_callback(topic, message):
     if device_name in devices:
         returned_value = devices[device_name](command)
         response_message = f'{device_name}:{returned_value}'
-        client.publish(f'pico/{BOARD_IP}/response', response_message)
+        client.publish(f'pico/{BOARD_IP}/response', response_message, retain=False)
         # print('response sent back to broker')
     else:
-        client.publish(f'pico/{BOARD_IP}/response', 'error:device_not_found')
+        client.publish(f'pico/{BOARD_IP}/response', 'error:device_not_found', retain=False)
         # print('response sent back to broker')
 
 client.set_callback(sub_callback)
