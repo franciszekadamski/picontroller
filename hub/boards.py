@@ -26,7 +26,7 @@ class PicoBoard:
         self.last_response = None
 
         try:
-            self.mqtt_client.publish(self.request_topic, message)
+            self.mqtt_client.publish(self.request_topic, message, retain=False)
 
             start_time = time.time()
             while self.last_response is None:
