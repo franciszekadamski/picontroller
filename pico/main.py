@@ -11,6 +11,7 @@ from network_tools import setup_network_connection
 
 from robust import MQTTClient
 
+watchdog = machine.WDT(timeout=8000)
 
 # configuration.json and board_ip.json files are created
 # and copied to the board manually
@@ -74,4 +75,5 @@ while True:
             success = connect_and_subscribe()
     finally:
         gc.collect()
+        watchdog.feed()
 
