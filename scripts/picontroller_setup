@@ -7,4 +7,5 @@ $PICONTROLLER_PROJECT_PATH/scripts/install_mqtt_on_hub
 $PICONTROLLER_PROJECT_PATH/scripts/install_python_packages
 $PICONTROLLER_PROJECT_PATH/scripts/setup_systemd_picontroller_service
 $PICONTROLLER_PROJECT_PATH/scripts/setup_systemd_picontrollerserver_service
+$PICONTROLLER_PROJECT_PATH/scripts/setup_systemd_picontroller_web_service_service
 

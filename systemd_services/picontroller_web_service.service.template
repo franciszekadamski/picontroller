@@ -1,0 +1,17 @@
+[Unit]
+Description=Run Picontroller Control Web Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=${PICONTROLLER_CONFIGURATION_PATH}/configuration.env
+ExecStart=${PICONTROLLER_PROJECT_PATH}/scripts/serve_web_service
+WorkingDirectory=${PICONTROLLER_PROJECT_PATH}
+User=${PICONTROLLER_HUB_USER}
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+

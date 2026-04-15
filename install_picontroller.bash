@@ -43,11 +43,14 @@ grep -q "PICONTROLLER_CONFIGURATION_PATH=" "$CONF_FILE" || echo "PICONTROLLER_CO
 
 sudo systemctl stop picontroller.service
 sudo systemctl stop picontrollerserver.service
+sudo systemctl stop picontroller_web_service.service
 sudo systemctl disable picontroller.service
 sudo systemctl disable picontrollerserver.service
+sudo systemctl disable picontroller_web_service.service
 
 sudo rm /etc/systemd/system/picontroller.service
 sudo rm /etc/systemd/system/picontrollerserver.service
+sudo rm /etc/systemd/system/picontroller_web_service.service
 
 $PICONTROLLER_PROJECT_PATH/scripts/picontroller_setup $PICONTROLLER_CONFIGURATION_PATH
 
@@ -58,5 +61,6 @@ sudo ufw allow 1883/tcp
 
 echo $(systemctl status picontroller.service)
 echo $(systemctl status picontrollerserver.service)
+echo $(systemctl status picontroller_web_service.service)
 
 

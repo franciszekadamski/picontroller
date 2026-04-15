@@ -1,0 +1,13 @@
+#!/usr/bin/bash
+
+
+echo "Installing picontroller_web_service.service"
+
+envsubst < $PICONTROLLER_PROJECT_PATH/systemd_services/picontroller_web_service.service.template | sudo tee /etc/systemd/system/picontroller_web_service.service > /dev/null
+
+sudo systemctl daemon-reexec
+sudo systemctl daemon-reload
+sudo systemctl enable picontroller_web_service.service
+sudo systemctl start picontroller_web_service.service
+echo "picontroller_web_service.service installed and enabled"
+

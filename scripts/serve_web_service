@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+
+/home/$PICONTROLLER_HUB_USER/.local/bin/streamlit run --server.port 8501 $PICONTROLLER_PROJECT_PATH/web_service/main.py
+
