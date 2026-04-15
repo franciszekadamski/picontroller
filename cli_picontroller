@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
 export PICONTROLLER_CONFIGURATION_PATH=$PICONTROLLER_CONFIGURATION_PATH # $1
-source ./scripts/export_variables
+source $PICONTROLLER_PROJECT_PATH/scripts/export_variables
 
 python3 "$PICONTROLLER_PROJECT_PATH/cli_app/cli.py" $1 $2 # $2 $3
