@@ -1,19 +1,22 @@
 #!/usr/bin/python3
 
+import os
+
 import streamlit as st
 import llm_interfaces
 import speak
 
+cli_picontroller_path = f'{os.environ["PICONTROLLER_PROJECT_PATH"]}/picontroller_cli'
 
 @st.cache_resource
 def load_model():
     return llm_interfaces.HumanLanguageInterface(
-        model_path='$HOME/picontroller_llm_models/qwen2.5-1.5b-instruct-q6_k.gguf'
+        model_path=f'{os.environ["HOME"]}/picontroller_llm_models/qwen2.5-1.5b-instruct-q6_k.gguf'
     )
 
 
 def execute_request(user_request_text):
-    get_output = llm_interfaces.execute_linux_command('cli_picontroller get')
+    get_output = llm_interfaces.execute_linux_command(f'{cli_picontroller_path} get')
     response, _ = hli(
         user_request_text,
         (
@@ -24,9 +27,9 @@ def execute_request(user_request_text):
             'No other answer is valid'
         )
     )
-    command = f'cli_picontroller set {response}'
+    command = f'{cli_picontroller_path} set {response}'
     llm_interfaces.execute_linux_command(command)
-    return llm_interfaces.execute_linux_command('cli_picontroller get')
+    return llm_interfaces.execute_linux_command(f'{cli_picontroller_path} get')
     # speak.speak_aloud(output)
 
 
