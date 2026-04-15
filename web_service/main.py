@@ -46,5 +46,25 @@ user_input = st.text_input('User request to the system', key='user_request')
 audio_input = st.audio_input('Voice command')
 
 if user_input:
-    store_table = execute_request(user_input)
+    if user_input.startswith('command'):
+        if len(user_input.split(' ')) >= 2:
+            store_key = user_input.split(' ')[1]
+            if store_key == 'get':
+                store_table = llm_interfaces.execute_linux_command(f'{cli_picontroller_path} get')
+            elif store_key == 'set':
+                if len(user_input.split(' ')) >= 4:
+                    store_key = user_input.split(' ')[2]
+                    store_value = user_input.split(' ')[3]
+                    store_table = llm_interfaces.execute_linux_command(f'{cli_picontroller_path} set {store_key} {store_value}')
+                else:
+                    st.warning('commands set requires key and value')
+                    store_table = llm_interfaces.execute_linux_command(f'{cli_picontroller_path} get')
+            else:
+                st.warning('available commands are set and get')
+                store_table = llm_interfaces.execute_linux_command(f'{cli_picontroller_path} get')
+        else:
+            st.warning('no command follows')
+            store_table = llm_interfaces.execute_linux_command(f'{cli_picontroller_path} get')
+    else:
+        store_table = execute_request(user_input)
     st.code(store_table)
