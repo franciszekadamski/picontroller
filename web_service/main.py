@@ -6,7 +6,7 @@ import streamlit as st
 import llm_interfaces
 import speak
 
-cli_picontroller_path = f'{os.environ["PICONTROLLER_PROJECT_PATH"]}/picontroller_cli'
+cli_picontroller_path = f'{os.environ["PICONTROLLER_PROJECT_PATH"]}/cli_picontroller'
 
 @st.cache_resource
 def load_model():
