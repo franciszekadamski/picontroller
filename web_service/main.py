@@ -8,6 +8,12 @@ import speak
 
 cli_picontroller_path = f'{os.environ["PICONTROLLER_PROJECT_PATH"]}/cli_picontroller'
 
+
+@st.cache_data
+def get_cli_output_table():
+    return llm_interfaces.execute_linux_command(f'{cli_picontroller_path} get')
+
+
 @st.cache_resource
 def load_model():
     return llm_interfaces.HumanLanguageInterface(
@@ -16,7 +22,7 @@ def load_model():
 
 
 def execute_request(user_request_text):
-    get_output = llm_interfaces.execute_linux_command(f'{cli_picontroller_path} get')
+    get_output = get_cli_output_table()
     response, _ = hli(
         user_request_text,
         (
