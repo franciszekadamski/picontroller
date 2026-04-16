@@ -2,10 +2,11 @@
 
 import io
 import os
+import tempfile
 
 from pydub import AudioSegment
 import streamlit as st
-import speech_recognition as sr
+import whisper
 
 import llm_interfaces
 import speak
@@ -26,6 +27,11 @@ def load_model():
     )
 
 
+@st.cache_resource
+def load_whisper_model():
+    return whisper.load_model('tiny.en')
+
+
 def execute_request(user_request_text):
     get_output = get_cli_output_table()
     response, _ = hli(
@@ -44,54 +50,26 @@ def execute_request(user_request_text):
     # speak.speak_aloud(output)
 
 
-def speech_to_text(audio_file):
-    """
-    Converts Streamlit audio_input to text using Google Speech Recognition.
-    """
-    recognizer = sr.Recognizer()
-    
-    try:
-        # IMPORTANT: Streamlit widgets reuse the same file object in memory.
-        # We must reset the pointer to the start or the recognizer sees 0 bytes.
-        audio_file.seek(0)
-        
-        # Read the file into an AudioFile object that sr understands
-        with sr.AudioFile(audio_file) as source:
-            recognizer.adjust_for_ambient_noise(source, duration=0.5) 
+def speech_to_text(audio_input):
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp_file:
+        tmp_file.write(audio_input.getvalue())
+        tmp_path = tmp_file.name
 
-            # record() reads the entire duration of the audio_input
-            audio_data = recognizer.record(source)
-
-            # Perform the recognition
-            # Note: This requires an internet connection for Google's API
-            text = recognizer.recognize_google(audio_data, language="en-US")
-            return text.lower()
-
-    except sr.UnknownValueError:
-        # This happens if the user recorded silence or noise
-        st.warning("Speech recognition could not understand the audio.")
-    except sr.RequestError as e:
-        # This happens if the Pi loses internet connection
-        st.error(f"Could not request results from Google; {e}")
-    except Exception as e:
-        st.error(f"Unexpected error: {e}")
-    
-    return None
+    return whisper.transcribe(tmp_path)['text']
 
 
 
 hli = load_model()
-
+whisper = load_whisper_model()
 
 user_input = st.text_input('User request to the system', key='user_request')
 user_voice_input = st.audio_input('Voice command', sample_rate=48000)
 
 if user_voice_input:
-    user_input = speech_to_text(user_voice_input)
     with st.spinner("Transcribing..."):
         user_input = speech_to_text(user_voice_input) 
         if user_input:
-            st.success(f"Recognized: {user_input}")
+            st.success(f"Voice transcription:\n{user_input}")
 
 if user_input:
     user_input = user_input.lower()
@@ -117,21 +95,3 @@ if user_input:
     else:
         store_table = execute_request(user_input)
     st.code(store_table)
-
-
-def speech_to_text(voice_input):
-    speech_recognizer = sr.Recognizer()
-
-    try:
-        with voice_input as source:
-            r.adjust_for_ambient_noise(source, duration=0.2)
-            audio = r.listen(source)
-            text = r.recognize_google(audio)
-            text = text.lower()  
-            
-    except speech_recognizer.RequestError as e:
-        print("Could not request results; {0}".format(e))
-
-    except speech_recognizer.UnknownValueError:
-        print("Could not understand audio")
-
